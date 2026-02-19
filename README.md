@@ -31,26 +31,26 @@ The system is structured around use cases and ports.
 
 ```
                ┌──────────────────────────┐
-               │        Controllers        │
-               │   (Inbound Web Adapter)   │
+               │        Controllers       │
+               │   (Inbound Web Adapter)  │
                └──────────────┬───────────┘
                               │
                               ▼
                ┌──────────────────────────┐
-               │     Application Layer     │
-               │  (Use Cases + Ports)      │
+               │     Application Layer    │
+               │  (Use Cases + Ports)     │
                └──────────────┬───────────┘
                               │
                               ▼
                ┌──────────────────────────┐
-               │        Domain Model       │
-               │     (Pure Business)       │
+               │        Domain Model      │
+               │     (Pure Business)      │
                └──────────────┬───────────┘
                               │
                               ▼
                ┌──────────────────────────┐
-               │    Persistence Adapter    │
-               │     (JPA / PostgreSQL)    │
+               │    Persistence Adapter   │
+               │     (JPA / PostgreSQL)   │
                └──────────────────────────┘
 ```
 
