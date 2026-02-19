@@ -1,6 +1,6 @@
 
 
-# 1) AuthProvider → какие запросы будет слать фронт
+# 1) AuthProvider
 
 ## ✅ Login
 
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 **Что сохранит фронт**
 
-* `accessToken` (memory/localStorage — как решишь)
+* `accessToken` (memory/localStorage)
 * `user` в state (`setUser(user)`)
 
 ---
@@ -56,14 +56,14 @@ POST /api/auth/register
 { "email": "x@y.com", "password": "...", "name": "..." }
 ```
 
-**Response (201 или 200)**
-Вариант A (как сейчас boolean):
+**Response (201  200)**
+Вариант A (boolean):
 
 ```json
 { "success": true }
 ```
 
-Вариант B (лучше, сразу логинит):
+Вариант B ():
 
 ```json
 {
@@ -94,7 +94,7 @@ Authorization: Bearer <accessToken>
 **Response (204)**
 (no body)
 
-> Да, с JWT logout можно и без сервера, но у тебя уже есть refresh tokens — так правильно.
+
 
 ---
 
@@ -104,7 +104,7 @@ Authorization: Bearer <accessToken>
 
 ### ✅ Initial load (вместо чтения localStorage)
 
-**Front useEffect** → загрузка списка
+**Front useEffect** 
 
 **Request**
 
@@ -141,7 +141,7 @@ Authorization: Bearer <accessToken>
 }
 ```
 
-> Это покрывает **карточки**, фильтры и счётчик Contacts(1).
+>  **cards**, filters, Contacts(1).
 
 ---
 
@@ -172,7 +172,7 @@ Authorization: Bearer <accessToken>
 ```
 
 **Response (201)**
-Возвращаем созданный объект в том же формате, чтобы фронт просто добавил в список:
+
 
 ```json
 {
@@ -232,7 +232,7 @@ If-Match: W/"3"
 
 **Response (204)**
 
-**Правило:** backend **каскадно** удаляет контакты (как у тебя сейчас в коде фронта).
+**rule:** backend **cascade** delete contacts.
 
 ---
 
@@ -240,7 +240,7 @@ If-Match: W/"3"
 
 ### ✅ Load contacts by organization
 
-Когда жмёшь `Contacts (1)` или открываешь модал:
+ `Contacts (1)`:
 
 ```http
 GET /api/organizations/{orgId}/contacts
@@ -368,8 +368,7 @@ Content-Type: application/json
 { "importedOrganizations": 123, "importedContacts": 456 }
 ```
 
-> Важно: надо заранее решить — import делает **replace** или **upsert**. Сейчас фронт делает replace в localStorage. Для enterprise лучше upsert по email/website/имени, но это отдельная политика.
-
+>  import **replace** or **upsert**? Сейчас фронт делает replace в localStorage. enterprise - upsert on email/website/name
 ---
 
 # 4) Что тебе важно решить прямо сейчас (иначе будет переделка)
@@ -380,15 +379,13 @@ Content-Type: application/json
 
 ## B) ETag / If-Match
 
-Фронт сейчас этого не шлёт. Чтобы не переписывать UI полностью:
-
-* на update/delete ты просто добавишь заголовок `If-Match` из `org.etag`
+* on update/delete add `If-Match` from `org.etag`
 
 ## C) contactsCount
 
-Либо:
+or:
 
-* отдаём сразу в `GET /organizations` (как я выше заложил)
+* in `GET /organizations` 
 
 
 ---
