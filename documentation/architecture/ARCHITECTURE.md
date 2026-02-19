@@ -11,7 +11,7 @@ CRMSystem follows Hexagonal Architecture (Ports & Adapters).
 
 ```
         ┌────────────────────┐
-        │      End User       │
+        │      End User      │
         └──────────┬─────────┘
                    │
                    ▼
