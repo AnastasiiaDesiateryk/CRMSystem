@@ -1,4 +1,16 @@
 # CRMSystem
+<!-- Documentation badges -->
+[![Architecture](https://img.shields.io/badge/Docs-Architecture-blue)](documentation/architecture/ARCHITECTURE.md)
+[![API Contract](https://img.shields.io/badge/Docs-API%20Contract-brightgreen)](documentation/api/API_CONTRACT.md)
+[![Auth Flow](https://img.shields.io/badge/Docs-Auth%20Flow-orange)](documentation/api/AUTHENTICATION_FLOW.md)
+[![Security](https://img.shields.io/badge/Docs-Security-red)](documentation/security/SECURITY.md)
+[![Threat Model](https://img.shields.io/badge/Docs-Threat%20Model-critical)](documentation/security/THREAT_MODEL.md)
+[![OWASP](https://img.shields.io/badge/Security-OWASP%20Alignment-black)](documentation/security/COMPLIANCE.md)
+[![ADRs](https://img.shields.io/badge/Docs-ADRs-lightgrey)](documentation/ADR/)
+[![Hardening Roadmap](https://img.shields.io/badge/Roadmap-Production%20Hardening-purple)](documentation/roadmap/PRODUCTION_HARDENING.md)
+[![Scaling](https://img.shields.io/badge/Architecture-Scaling%20Strategy-9cf)](documentation/architecture/SCALING_STRATEGY.md)
+[![API Versioning](https://img.shields.io/badge/Architecture-API%20Versioning-ffd700)](documentation/architecture/API_VERSIONING.md)
+
 
 ## Overview
 
@@ -289,4 +301,26 @@ target/bom.json
 See GitHub **Milestones** for architecture evolution and delivery phases.
 
 ---
+## Documentation
+
+### Architecture
+- [Architecture Overview](documentation/architecture/ARCHITECTURE.md)
+- [Design Principles](documentation/architecture/DESIGN_PRINCIPLES.md)
+- [C4 Diagrams](documentation/architecture/c4/)
+- [API Versioning Strategy](documentation/architecture/API_VERSIONING.md)
+- [Scaling Strategy](documentation/architecture/SCALING_STRATEGY.md)
+
+### API
+- [API Contract](documentation/api/API_CONTRACT.md)
+- [Authentication Flow](documentation/api/AUTHENTICATION_FLOW.md)
+
+### Security
+- [Security Model](documentation/security/SECURITY.md)
+- [Threat Model (STRIDE)](documentation/security/THREAT_MODEL.md)
+- [OWASP Alignment](documentation/security/COMPLIANCE.md)
+
+### Decisions & Roadmap
+- [Architecture Decision Records](documentation/ADR/)
+- [Production Hardening Roadmap](documentation/roadmap/PRODUCTION_HARDENING.md)
+
 
