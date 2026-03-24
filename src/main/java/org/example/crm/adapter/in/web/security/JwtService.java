@@ -12,7 +12,9 @@ import org.example.crm.domain.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -60,15 +62,12 @@ public class JwtService {
         this.issuer = issuer;
         this.audience = audience;
 
-        try (InputStream privateStream = resource(keysPath + "/private.pem");
-             InputStream publicStream  = resource(keysPath + "/public.pem")) {
-
-            String privatePem = new String(privateStream.readAllBytes())
+            String privatePem = Files.readString(Path.of(keysPath, "private.pem"), StandardCharsets.UTF_8)
                     .replaceAll("-----\\w+ RSA PRIVATE KEY-----", "")
                     .replaceAll("-----\\w+ PRIVATE KEY-----", "")
                     .replaceAll("\\s", "");
 
-            String publicPem = new String(publicStream.readAllBytes())
+            String publicPem = Files.readString(Path.of(keysPath, "public.pem"), StandardCharsets.UTF_8)
                     .replaceAll("-----\\w+ PUBLIC KEY-----", "")
                     .replaceAll("\\s", "");
 
@@ -79,14 +78,8 @@ public class JwtService {
 
             this.privateKey = (RSAPrivateKey) kf.generatePrivate(new PKCS8EncodedKeySpec(privateBytes));
             this.publicKey  = (RSAPublicKey)  kf.generatePublic(new X509EncodedKeySpec(publicBytes));
-        }
     }
 
-    private static InputStream resource(String path) {
-        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
-        if (is == null) throw new IllegalStateException("RSA key file not found in classpath: " + path);
-        return is;
-    }
 
     /**
      * Creates a short-lived access token (RS256).
