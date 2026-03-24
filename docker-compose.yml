@@ -1,0 +1,56 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: crm
+      POSTGRES_USER: crm
+      POSTGRES_PASSWORD: crm_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U crm -d crm" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    volumes:
+      - ./secrets/jwt:/keys:ro
+    image: crm-backend
+    build: .
+    environment:
+      BOOTSTRAP_ADMIN_EMAIL: admin@crm.local
+      BOOTSTRAP_ADMIN_PASSWORD: ChangeMe123!
+      BOOTSTRAP_ADMIN_NAME: Admin
+
+      SPRING_PROFILES_ACTIVE: dev  #  прод тест
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/crm
+      SPRING_DATASOURCE_USERNAME: crm
+      SPRING_DATASOURCE_PASSWORD: crm_pass
+      JWT_KEYS_PATH: /keys
+      JWT_ISSUER: http://localhost:8080
+      JWT_AUDIENCE: crm-frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    image: crm-frontend
+    build:
+      context: ../CRMSystemFrontend
+      dockerfile: Dockerfile
+    environment:
+      VITE_API_URL: http://localhost:8080
+    ports:
+      - "5173:5173"
+    depends_on:
+      app:
+        condition: service_started
+
+volumes:
+  db-data:

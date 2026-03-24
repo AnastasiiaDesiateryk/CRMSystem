@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    baseline-on-migrate: true
+
+logging:
+  level:
+    org.flywaydb: DEBUG
+    org.springframework.security: DEBUG
+
+app:
+  cors:
+    allowed-origins: "http://localhost:5173"
