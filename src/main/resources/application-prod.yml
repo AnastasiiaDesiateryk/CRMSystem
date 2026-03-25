@@ -1,0 +1,16 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    baseline-on-migrate: true
+
+jwt:
+  keys:
+    path: ${JWT_KEYS_PATH:/etc/keys}
+  issuer: ${JWT_ISSUER:https://api.example.com}
+  audience: ${JWT_AUDIENCE:crm-frontend}
+
+app:
+  cors:
+    allowed-origins: "https://www.example.com"
