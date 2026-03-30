@@ -51,7 +51,7 @@ public class UserService implements UserServicePort {
         dto.setEmail(user.getEmail());
         dto.setName(user.getName());
         dto.setRoles(user.getRoles());
-
+        dto.setHasAccess(user.isHasAccess());
         return dto;
     }
 }

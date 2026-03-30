@@ -1,16 +1,20 @@
 package org.example.crm.application.dto;
 
+import java.time.OffsetDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-public class UserDto {
+public class AdminUserDto {
     private UUID id;
     private String email;
     private String name;
     private Set<String> roles;
     private boolean hasAccess;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
 
-    public UserDto() {}
+    public AdminUserDto() {
+    }
 
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
@@ -26,4 +30,10 @@ public class UserDto {
 
     public boolean isHasAccess() { return hasAccess; }
     public void setHasAccess(boolean hasAccess) { this.hasAccess = hasAccess; }
+
+    public OffsetDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(OffsetDateTime createdAt) { this.createdAt = createdAt; }
+
+    public OffsetDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(OffsetDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

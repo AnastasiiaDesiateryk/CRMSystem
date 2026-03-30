@@ -36,8 +36,12 @@ public class UserPersistenceAdapter implements LoadUserPort {
         User u = new User();
         u.setId(e.getId());
         u.setEmail(e.getEmail());
+        u.setPasswordHash(e.getPasswordHash());
         u.setName(e.getName());
-        u.setRoles(e.getRoles()); // как у тебя реализовано в entity
+        u.setRoles(e.getRoles());
+        u.setHasAccess(e.isHasAccess());
+        u.setCreatedAt(e.getCreatedAt());
+        u.setUpdatedAt(e.getUpdatedAt());
         return u;
     }
 }
