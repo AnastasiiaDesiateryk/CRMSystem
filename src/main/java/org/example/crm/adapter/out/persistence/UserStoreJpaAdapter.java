@@ -7,9 +7,9 @@ import org.example.crm.domain.model.User;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -57,14 +57,7 @@ public class UserStoreJpaAdapter implements UserStore {
 
         UUID id = user.getId() != null ? user.getId() : UUID.randomUUID();
 
-        // если есть — обновляем; если нет — создаём
         UserEntity e = repo.findById(id).orElseGet(UserEntity::new);
-
-        // IMPORTANT:
-        // 1) email храним нормализованно (lowercase) — у тебя порт уже ожидает lower
-        // 2) createdAt/updatedAt в БД есть defaults + trigger, но entity-поля у тебя non-null,
-        //    поэтому при создании лучше выставить их (или сделать nullable).
-        boolean isNew = e.getId() == null;
 
         e.setId(id);
         e.setEmail(user.getEmail().trim().toLowerCase());
@@ -74,15 +67,6 @@ public class UserStoreJpaAdapter implements UserStore {
 
         Set<String> roles = user.getRoles() == null ? Set.of() : user.getRoles();
         e.setRoles(new HashSet<>(roles));
-
-        OffsetDateTime now = OffsetDateTime.now();
-        if (isNew) {
-            // если у тебя в БД дефолт now(), можно и не ставить,
-            // но тогда entity поля должны быть nullable.
-            if (e.getCreatedAt() == null) e.setCreatedAt(now);
-        }
-        // updatedAt в БД триггером, но чтобы entity не падала на not-null до flush:
-        if (e.getUpdatedAt() == null) e.setUpdatedAt(now);
 
         UserEntity saved = repo.save(e);
         return toDomain(saved);
@@ -94,8 +78,28 @@ public class UserStoreJpaAdapter implements UserStore {
         if (userId == null) throw new IllegalArgumentException("user_id_required");
         if (roles == null) roles = Set.of();
 
-        UserEntity u = repo.findById(userId).orElseThrow();
+        UserEntity u = repo.findById(userId).orElseThrow(() -> new org.example.crm.application.dto.NotFoundException("user_not_found"));
         u.setRoles(new HashSet<>(roles));
+        repo.save(u);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<User> findAll() {
+        return repo.findAllByOrderByCreatedAtDesc().stream()
+                .map(UserStoreJpaAdapter::toDomain)
+                .toList();
+    }
+
+    @Transactional
+    @Override
+    public void setHasAccess(UUID userId, boolean hasAccess) {
+        if (userId == null) throw new IllegalArgumentException("user_id_required");
+
+        UserEntity u = repo.findById(userId)
+                .orElseThrow(() -> new org.example.crm.application.dto.NotFoundException("user_not_found"));
+
+        u.setHasAccess(hasAccess);
         repo.save(u);
     }
 
@@ -113,7 +117,6 @@ public class UserStoreJpaAdapter implements UserStore {
         u.setHasAccess(e.isHasAccess());
         u.setRoles(e.getRoles());
 
-        // createdAt/updatedAt: домен OffsetDateTime
         u.setCreatedAt(e.getCreatedAt());
         u.setUpdatedAt(e.getUpdatedAt());
 

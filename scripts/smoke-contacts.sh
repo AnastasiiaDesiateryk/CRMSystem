@@ -140,3 +140,5 @@ req cdel DELETE "$BASE/api/organizations/$ORG_ID/contacts/$CONTACT_ID" \
   -H "If-Match: $ETAG2"
 
 echo "OK: smoke contacts passed"
+
+# usage:  BASE=http://localhost:8080 ./scripts/smoke-contacts.sh

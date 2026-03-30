@@ -180,3 +180,5 @@ fi
 echo "delete=OK ($CODE)"
 
 log "DONE: smoke passed"
+
+# usage:  ./scripts/smoke.sh
