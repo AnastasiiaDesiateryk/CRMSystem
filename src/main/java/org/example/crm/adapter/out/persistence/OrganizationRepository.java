@@ -1,15 +1,3 @@
-//package org.example.crm.adapter.out.persistence;
-//
-//import org.example.crm.domain.model.Organization;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import java.util.UUID;
-//import org.springframework.stereotype.Repository;
-//import org.example.crm.adapter.out.persistence.entity.OrganizationEntity;
-//
-//@Repository
-//public interface OrganizationRepository extends JpaRepository<OrganizationEntity, UUID> {
-//}
-
 package org.example.crm.adapter.out.persistence;
 
 import org.example.crm.adapter.out.persistence.entity.OrganizationEntity;
@@ -40,4 +28,8 @@ public interface OrganizationRepository extends JpaRepository<OrganizationEntity
     @Override
     @EntityGraph(attributePaths = {"contacts"})
     Optional<OrganizationEntity> findById(UUID id);
+
+    Optional<OrganizationEntity> findByWebsiteIgnoreCase(String website);
+
+    Optional<OrganizationEntity> findByNameIgnoreCase(String name);
 }

@@ -1,22 +1,3 @@
-//package org.example.crm.adapter.in.web.dto;
-//
-//public record OrganizationResponse(
-//        String id,
-//        String name,
-//        String website,
-//        String websiteStatus,
-//        String linkedinUrl,
-//        String countryRegion,
-//        String email,
-//        String category,
-//        String status,
-//        String notes,
-//        String preferredLanguage,
-//        String createdAt,
-//        String updatedAt,
-//        String etag
-//) {}
-// src/.../adapter/in/web/dto/OrganizationResponse.java
 package org.example.crm.adapter.in.web.dto;
 
 import java.util.List;
