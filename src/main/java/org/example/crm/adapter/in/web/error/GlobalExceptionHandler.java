@@ -11,6 +11,10 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +48,45 @@ public class GlobalExceptionHandler {
         LOG.log(Level.FINE, () -> "NOT_FOUND path=" + safePath(req));
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(status, "not_found", "Not found"));
+    }
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<ErrorResponse> handleMissingRequestPart(MissingServletRequestPartException ex,
+                                                                  HttpServletRequest req) {
+        int status = HttpStatus.BAD_REQUEST.value();
+        LOG.log(Level.FINE, () -> "BAD_REQUEST path=" + safePath(req)
+                + " msg=Missing request part: " + safeMsg(ex.getRequestPartName()));
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status, "bad_request",
+                        "Missing request part: " + safeMsg(ex.getRequestPartName())));
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<ErrorResponse> handleMultipartException(MultipartException ex,
+                                                                  HttpServletRequest req) {
+        int status = HttpStatus.BAD_REQUEST.value();
+        LOG.log(Level.FINE, () -> "BAD_REQUEST path=" + safePath(req)
+                + " msg=" + safeMsg(ex.getMessage()));
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status, "bad_request", "Invalid multipart request"));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex,
+                                                                     HttpServletRequest req) {
+        int status = HttpStatus.PAYLOAD_TOO_LARGE.value();
+        LOG.log(Level.FINE, () -> "PAYLOAD_TOO_LARGE path=" + safePath(req));
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status, "payload_too_large", "Uploaded file is too large"));
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedMediaType(HttpMediaTypeNotSupportedException ex,
+                                                                    HttpServletRequest req) {
+        int status = HttpStatus.UNSUPPORTED_MEDIA_TYPE.value();
+        LOG.log(Level.FINE, () -> "UNSUPPORTED_MEDIA_TYPE path=" + safePath(req)
+                + " msg=" + safeMsg(ex.getMessage()));
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status, "unsupported_media_type", "Unsupported media type"));
     }
 
     /**

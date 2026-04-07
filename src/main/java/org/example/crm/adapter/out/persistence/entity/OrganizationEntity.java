@@ -56,8 +56,6 @@ public class OrganizationEntity {
     @Column(name = "notes", columnDefinition = "text")
     private String notes;
 
-    // фронт показывает DE/FR/EN как бейдж на карточке (сейчас в моках это в Contact,
-    // но UI у тебя бейджит организацию — значит поле полезно на уровне organization)
     @Column(name = "preferred_language", length = 5)
     private String preferredLanguage;
 

@@ -56,10 +56,10 @@ public class ContactEntity {
         updatedAt = now;
     }
 
-//    @PreUpdate
-//    void preUpdate() {
-//        updatedAt = Instant.now();
-//    }
+    @PreUpdate
+    void preUpdate() {
+        updatedAt = Instant.now();
+    }
 
     // getters/setters
 
