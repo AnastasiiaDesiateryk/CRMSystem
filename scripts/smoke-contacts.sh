@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_smoke-env.sh"
 
-BASE="${BASE:-http://localhost:8080}"
-
-
-LOGIN_EMAIL="${LOGIN_EMAIL:-admin@crm.local}"
-LOGIN_PASSWORD="${LOGIN_PASSWORD:-ChangeMe123!}"
+BASE="${BASE:-$SMOKE_BASE_URL}"
+LOGIN_EMAIL="${LOGIN_EMAIL:-$SMOKE_ADMIN_EMAIL}"
+LOGIN_PASSWORD="${LOGIN_PASSWORD:-$SMOKE_ADMIN_PASSWORD}"
 
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
@@ -141,4 +140,4 @@ req cdel DELETE "$BASE/api/organizations/$ORG_ID/contacts/$CONTACT_ID" \
 
 echo "OK: smoke contacts passed"
 
-# usage:  BASE=http://localhost:8080 ./scripts/smoke-contacts.sh
+# usage:  scripts/smoke-contacts.sh

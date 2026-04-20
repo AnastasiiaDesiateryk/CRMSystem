@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE="${BASE:-http://localhost:8080}"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_smoke-env.sh"
 
-LOGIN_EMAIL="${LOGIN_EMAIL:-admin@crm.local}"
-LOGIN_PASSWORD="${LOGIN_PASSWORD:-ChangeMe123!}"
+BASE="${BASE:-$SMOKE_BASE_URL}"
+LOGIN_EMAIL="${LOGIN_EMAIL:-$SMOKE_ADMIN_EMAIL}"
+LOGIN_PASSWORD="${LOGIN_PASSWORD:-$SMOKE_ADMIN_PASSWORD}"
 
 CREATE_FILE="${CREATE_FILE:-./tmp/import-smoke/import-create.xlsx}"
 MERGE_FILE="${MERGE_FILE:-./tmp/import-smoke/import-merge.xlsx}"
@@ -247,4 +248,4 @@ assert_contact_email_count "$tmpdir/org2.json" "$SMOKE_CONTACT_1" 1
 echo "OK: smoke import passed"
 
 #python scripts/generate-import-fixtures.py
- #./scripts/smoke-import.sh
+#./scripts/smoke-import.sh

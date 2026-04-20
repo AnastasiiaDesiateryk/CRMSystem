@@ -2,7 +2,7 @@ spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/crm}
     username: ${SPRING_DATASOURCE_USERNAME:crm}
-    password: ${SPRING_DATASOURCE_PASSWORD:crm_pass}
+    password: ${db_password:${SPRING_DATASOURCE_PASSWORD:crm_pass}}
     driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
@@ -27,3 +27,5 @@ management:
     web:
       exposure:
         include: health,info,mappings
+
+BOOTSTRAP_ADMIN_PASSWORD: ${bootstrap_admin_password:}

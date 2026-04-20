@@ -4,8 +4,13 @@ target/
 !**/src/test/**/target/
 .kotlin
 
+.env
+.env.*
 ### Secrets ###
-secrets/
+/secrets/*
+!/secrets/jwt/
+/secrets/jwt/*
+!/secrets/jwt/*.example
 
 workflows/
 

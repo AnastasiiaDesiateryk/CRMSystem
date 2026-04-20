@@ -12,9 +12,11 @@ set -euo pipefail
 #
 # Requires: curl, jq
 
-BASE_URL="${BASE_URL:-http://localhost:8080}"
-ADMIN_EMAIL="${ADMIN_EMAIL:?ADMIN_EMAIL is required}"
-ADMIN_PASSWORD="${ADMIN_PASSWORD:?ADMIN_PASSWORD is required}"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_smoke-env.sh"
+
+BASE_URL="${BASE_URL:-$SMOKE_BASE_URL}"
+ADMIN_EMAIL="${ADMIN_EMAIL:-$SMOKE_ADMIN_EMAIL}"
+ADMIN_PASSWORD="${ADMIN_PASSWORD:-$SMOKE_ADMIN_PASSWORD}"
 USER_EMAIL="${USER_EMAIL:-smoke.user.$(date +%s)@example.com}"
 USER_PASSWORD="${USER_PASSWORD:-secret12345}"
 USER_NAME="${USER_NAME:-Smoke User}"
@@ -169,10 +171,4 @@ green "OK: promoted user can access admin endpoints"
 
 green "All admin panel backend smoke checks passed."
 
-# usage:  BASE_URL=http://localhost:8080 \
-          #ADMIN_EMAIL=admin@crm.local \
-          #ADMIN_PASSWORD='ChangeMe123!' \
-          #USER_EMAIL=smoke.user.$(date +%s)@example.com \
-          #USER_PASSWORD=secret12345 \
-          #USER_NAME="Smoke User" \
-          #bash scripts/smoke-adminpanel.sh
+# usage:  scripts/smoke-adminpanel.sh

@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_URL="${BASE_URL:-http://localhost:8080}"
-EMAIL="${EMAIL:-admin@crm.local}"
-PASS="${PASS:-ChangeMe123!}"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_smoke-env.sh"
+
+BASE_URL="${BASE_URL:-$SMOKE_BASE_URL}"
+EMAIL="${EMAIL:-$SMOKE_ADMIN_EMAIL}"
+PASS="${PASS:-$SMOKE_ADMIN_PASSWORD}"
 
 need() { command -v "$1" >/dev/null 2>&1 || { echo "Missing: $1"; exit 1; }; }
 need curl
@@ -129,7 +131,7 @@ CREATE_BODY='{
   "preferredLanguage":"EN"
 }'
 read -r H B CODE < <(http POST "$BASE_URL/api/organizations" "$CREATE_BODY" "application/json")
-# иногда делают 200 вместо 201 — это плохо, но не смертельно. хочешь — ужесточи.
+
 if [[ "$CODE" != "201" && "$CODE" != "200" ]]; then
   echo "FAIL: create expected HTTP 201/200, got $CODE"
   echo "---- headers ----"; cat "$H"
@@ -150,10 +152,10 @@ echo "etag_header=$ETAG_HDR"
 echo "etag_body=$ETAG_BODY"
 
 log "Organizations: PATCH with If-Match (positive)"
-# ВАЖНО: If-Match должен совпадать строка-в-строку с тем, что вернул ETag (включая W/ и кавычки)
+
 IF_MATCH="$ETAG_HDR"
 
-# Если у тебя PATCH контроллер ожидает merge-patch, поменяй Content-Type на application/merge-patch+json
+
 PATCH_CT="${PATCH_CT:-application/json}"
 
 read -r H B CODE < <(http PATCH "$BASE_URL/api/organizations/$ORG_ID" '{"notes":"patched"}' "$PATCH_CT")
@@ -181,4 +183,4 @@ echo "delete=OK ($CODE)"
 
 log "DONE: smoke passed"
 
-# usage:  ./scripts/smoke.sh
+# usage: scripts/smoke.sh
