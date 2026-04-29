@@ -4,6 +4,15 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME:crm}
     password: ${db_password:${SPRING_DATASOURCE_PASSWORD:crm_pass}}
     driver-class-name: org.postgresql.Driver
+
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX:30}
+      minimum-idle: ${DB_POOL_MIN_IDLE:8}
+      connection-timeout: ${DB_CONNECTION_TIMEOUT_MS:3000}
+      idle-timeout: ${DB_IDLE_TIMEOUT_MS:600000}
+      max-lifetime: ${DB_MAX_LIFETIME_MS:1800000}
+      leak-detection-threshold: ${DB_LEAK_DETECTION_MS:10000}
+
   jpa:
     open-in-view: false
     hibernate:
