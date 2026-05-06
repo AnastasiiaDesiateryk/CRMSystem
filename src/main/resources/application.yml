@@ -13,6 +13,11 @@ spring:
       max-lifetime: ${DB_MAX_LIFETIME_MS:1800000}
       leak-detection-threshold: ${DB_LEAK_DETECTION_MS:10000}
 
+    servlet:
+      multipart:
+        max-file-size: ${SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE:20MB}
+        max-request-size: ${SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE:20MB}
+
   jpa:
     open-in-view: false
     hibernate:
