@@ -27,6 +27,7 @@ public record OrganizationResponse(
             String email,
             String preferredLanguage,
             String notes,
+            Boolean isPrimaryEmail,
             String createdAt,
             String updatedAt,
             String etag

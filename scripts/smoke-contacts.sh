@@ -102,11 +102,15 @@ req c1 POST "$BASE/api/organizations/$ORG_ID/contacts" \
     "rolePosition":"QA",
     "email":"contact@example.com",
     "preferredLanguage":"EN",
-    "notes":"smoke"
+    "notes":"smoke",
+    "isPrimaryEmail": true
   }'
 
 CONTACT_ID="$(get_json_field "$tmpdir/c1.json" "id")"
 echo "CONTACT_ID=$CONTACT_ID"
+
+PRIMARY_CREATED="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("isPrimaryEmail"))' "$tmpdir/c1.json")"
+[[ "$PRIMARY_CREATED" == "True" || "$PRIMARY_CREATED" == "true" ]] || fail "create contact did not persist isPrimaryEmail=true"
 
 # --- 3) GET contact + ETag ---
 echo "3) GET contact + ETag"
@@ -115,6 +119,9 @@ req cget GET "$BASE/api/organizations/$ORG_ID/contacts/$CONTACT_ID"
 ETAG="$(get_etag "$tmpdir/cget.h")"
 [[ -n "$ETAG" ]] || fail "no ETag on GET contact"
 echo "ETAG=$ETAG"
+
+PRIMARY_GET="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("isPrimaryEmail"))' "$tmpdir/cget.json")"
+[[ "$PRIMARY_GET" == "True" || "$PRIMARY_GET" == "true" ]] || fail "GET contact did not return isPrimaryEmail=true"
 
 # --- 4) PATCH contact ---
 echo "4) PATCH contact (If-Match required)"
@@ -126,12 +133,16 @@ req cpatch PATCH "$BASE/api/organizations/$ORG_ID/contacts/$CONTACT_ID" \
     "rolePosition":"QA",
     "email":"contact2@example.com",
     "preferredLanguage":"EN",
-    "notes":"updated"
+    "notes":"updated",
+    "isPrimaryEmail": false
   }'
 
 ETAG2="$(get_etag "$tmpdir/cpatch.h")"
 [[ -n "$ETAG2" ]] || fail "no ETag on PATCH contact"
 echo "ETAG2=$ETAG2"
+
+PRIMARY_PATCH="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("isPrimaryEmail"))' "$tmpdir/cpatch.json")"
+[[ "$PRIMARY_PATCH" == "False" || "$PRIMARY_PATCH" == "false" ]] || fail "PATCH contact did not update isPrimaryEmail=false"
 
 # --- 5) DELETE contact ---
 echo "5) DELETE contact (If-Match required)"

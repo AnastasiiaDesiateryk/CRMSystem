@@ -27,7 +27,7 @@ public class OrganizationWriteAdapter implements OrganizationWritePort {
     @Override
     public OrganizationDetails create(CreateOrganizationCommand cmd) {
         OrganizationEntity e = new OrganizationEntity();
-        // лучше НЕ задавать id руками, дай БД/Entity решать (но можно и так, если везде так)
+
         e.setId(UUID.randomUUID());
 
         applyCreate(e, cmd);
@@ -47,12 +47,11 @@ public class OrganizationWriteAdapter implements OrganizationWritePort {
         OrganizationEntity e = repo.findById(id).orElse(null);
         if (e == null) return Optional.empty();
 
-        // contract: version mismatch -> empty (НЕ exception)
+        // contract: version mismatch -> empty
         if (e.getVersion() != expectedVersion) return Optional.empty();
 
         applyPatch(e, cmd);
 
-        // ВАЖНО: flush, чтобы Hibernate выполнил UPDATE и обновил @Version в entity ДО возврата
         OrganizationEntity saved = repo.saveAndFlush(e);
 
         return Optional.of(toDetails(saved));
@@ -64,7 +63,7 @@ public class OrganizationWriteAdapter implements OrganizationWritePort {
         OrganizationEntity e = repo.findById(id).orElse(null);
         if (e == null) return false;
 
-        // contract: version mismatch -> false (НЕ exception)
+        // contract: version mismatch -> false
         if (e.getVersion() != expectedVersion) return false;
 
         repo.delete(e);
@@ -98,27 +97,6 @@ public class OrganizationWriteAdapter implements OrganizationWritePort {
         if (c.preferredLanguage() != null) e.setPreferredLanguage(c.preferredLanguage());
     }
 
-//    private OrganizationDetails toDetails(OrganizationEntity e) {
-//        return new OrganizationDetails(
-//                e.getId().toString(),
-//                e.getName(),
-//                e.getWebsite(),
-//                e.getWebsiteStatus(),
-//                e.getLinkedinUrl(),
-//                e.getCountryRegion(),
-//                e.getEmail(),
-//                e.getCategory(),
-//                e.getStatus(),
-//                e.getNotes(),
-//                e.getPreferredLanguage(),
-//                e.getCreatedAt(),
-//                e.getUpdatedAt(),
-//                e.getVersion()
-//        );
-//    }
-
-
-// ...
 
     private OrganizationDetails toDetails(OrganizationEntity e) {
         return new OrganizationDetails(
@@ -151,6 +129,7 @@ public class OrganizationWriteAdapter implements OrganizationWritePort {
                         c.getEmail(),
                         c.getPreferredLanguage(),
                         c.getNotes(),
+                        c.isPrimaryEmail(),
                         c.getCreatedAt(),
                         c.getUpdatedAt(),
                         c.getVersion()

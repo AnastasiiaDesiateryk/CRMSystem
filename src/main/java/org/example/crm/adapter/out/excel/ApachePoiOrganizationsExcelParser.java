@@ -32,6 +32,7 @@ public class ApachePoiOrganizationsExcelParser implements OrganizationsExcelPars
     private static final String COL_CONTACT_NAME = "Name personal contact";
     private static final String COL_CONTACT_EMAIL_1 = "Email personal contact (1)";
     private static final String COL_CONTACT_EMAIL_2 = "Email personal contact (2)";
+    private static final String COL_MAIN_EMAIL_PERSONAL_CONTACT = "Main Email personal contact";
 
     private static final List<String> REQUIRED_HEADERS = List.of(
             COL_COMPANY,
@@ -90,7 +91,9 @@ public class ApachePoiOrganizationsExcelParser implements OrganizationsExcelPars
                         getCellValue(row, headerIndexes, COL_CATEGORY_NEW, formatter),
                         getCellValue(row, headerIndexes, COL_CONTACT_NAME, formatter),
                         getCellValue(row, headerIndexes, COL_CONTACT_EMAIL_1, formatter),
-                        getCellValue(row, headerIndexes, COL_CONTACT_EMAIL_2, formatter)
+                        getCellValue(row, headerIndexes, COL_CONTACT_EMAIL_2, formatter),
+                        getOptionalCellValue(row, headerIndexes, COL_MAIN_EMAIL_PERSONAL_CONTACT, formatter)
+
                 ));
             }
 
@@ -135,6 +138,13 @@ public class ApachePoiOrganizationsExcelParser implements OrganizationsExcelPars
             );
         }
 
+        Integer optionalMainEmailIndex =
+                normalizedHeaderIndexes.get(normalizeHeader(COL_MAIN_EMAIL_PERSONAL_CONTACT));
+
+        if (optionalMainEmailIndex != null) {
+            resolved.put(COL_MAIN_EMAIL_PERSONAL_CONTACT, optionalMainEmailIndex);
+        }
+
         return resolved;
     }
 
@@ -149,6 +159,25 @@ public class ApachePoiOrganizationsExcelParser implements OrganizationsExcelPars
     }
 
     private String getCellValue(
+            Row row,
+            Map<String, Integer> headerIndexes,
+            String header,
+            DataFormatter formatter
+    ) {
+        Integer index = headerIndexes.get(header);
+        if (index == null) {
+            return "";
+        }
+
+        Cell cell = row.getCell(index, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+        if (cell == null) {
+            return "";
+        }
+
+        return formatter.formatCellValue(cell).trim();
+    }
+
+    private String getOptionalCellValue(
             Row row,
             Map<String, Integer> headerIndexes,
             String header,

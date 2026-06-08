@@ -85,7 +85,16 @@ public class ImportOrganizationsFromExcelService implements ImportOrganizationsF
                     warnings,
                     row.rowNumber()
             );
+
+            applyPrimaryEmailFromExcelIfPresent(
+                    organizationId,
+                    row.mainEmailPersonalContact(),
+                    warnings,
+                    row.rowNumber()
+            );
         }
+
+
 
         return new ImportOrganizationsFromExcelResult(
                 organizationsCreated,
@@ -94,6 +103,29 @@ public class ImportOrganizationsFromExcelService implements ImportOrganizationsF
                 rowsSkipped,
                 warnings
         );
+    }
+
+    private void applyPrimaryEmailFromExcelIfPresent(
+            String organizationId,
+            String mainEmailFromExcel,
+            List<String> warnings,
+            int rowNumber
+    ) {
+        String normalized = normalizeEmail(mainEmailFromExcel);
+        if (normalized == null) {
+            return;
+        }
+
+        boolean matched = contactImportPersistencePort.updatePrimaryEmailFlags(
+                organizationId,
+                normalized
+        );
+
+        if (!matched) {
+            warnings.add(
+                    "Row " + rowNumber + ": main email personal contact '" + normalized + "' not matched to any contact"
+            );
+        }
     }
 
     private ImportedOrganizationData mapOrganizationPatch(ImportedOrganizationRow row) {
@@ -176,7 +208,8 @@ public class ImportOrganizationsFromExcelService implements ImportOrganizationsF
                 null,
                 email,
                 null,
-                null
+                null,
+                false
         );
 
         contactImportPersistencePort.createContact(contact);

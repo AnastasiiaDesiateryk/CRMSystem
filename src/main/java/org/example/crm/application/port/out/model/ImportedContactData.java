@@ -6,6 +6,7 @@ public record ImportedContactData(
         String rolePosition,
         String email,
         String preferredLanguage,
-        String notes
+        String notes,
+        Boolean isPrimaryEmail
 ) {
 }

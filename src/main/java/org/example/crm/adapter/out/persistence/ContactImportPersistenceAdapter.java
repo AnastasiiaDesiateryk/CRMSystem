@@ -6,6 +6,7 @@ import org.example.crm.application.port.out.ContactImportPersistencePort;
 import org.example.crm.application.port.out.model.ImportedContactData;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -44,7 +45,34 @@ public class ContactImportPersistenceAdapter implements ContactImportPersistence
         entity.setEmail(contact.email());
         entity.setPreferredLanguage(contact.preferredLanguage());
         entity.setNotes(contact.notes());
+        entity.setPrimaryEmail(Boolean.TRUE.equals(contact.isPrimaryEmail()));
 
         contactRepository.save(entity);
+    }
+
+    @Override
+    public boolean updatePrimaryEmailFlags(String organizationId, String primaryEmail) {
+        UUID orgId = UUID.fromString(organizationId);
+
+        List<ContactEntity> contacts = contactRepository.findAllByOrganization_Id(orgId);
+
+        boolean matched = false;
+
+        for (ContactEntity contact : contacts) {
+            boolean isPrimary = contact.getEmail() != null
+                    && contact.getEmail().trim().equalsIgnoreCase(primaryEmail);
+
+            contact.setPrimaryEmail(isPrimary);
+
+            if (isPrimary) {
+                matched = true;
+            }
+        }
+
+        if (matched) {
+            contactRepository.saveAll(contacts);
+        }
+
+        return matched;
     }
 }

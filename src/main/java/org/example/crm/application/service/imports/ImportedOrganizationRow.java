@@ -10,6 +10,7 @@ public record ImportedOrganizationRow(
         String categoryNew,
         String contactName,
         String contactEmail1,
-        String contactEmail2
+        String contactEmail2,
+        String mainEmailPersonalContact
 ) {
 }

@@ -134,6 +134,36 @@ if actual != expected:
 PY
 }
 
+assert_primary_email_count() {
+  local file="$1"
+  local expected="$2"
+  python3 - "$file" "$expected" <<'PY'
+import json, sys
+path, expected = sys.argv[1], int(sys.argv[2])
+org = json.load(open(path))
+contacts = org.get("contacts") or []
+actual = sum(1 for c in contacts if c.get("isPrimaryEmail") is True)
+if actual != expected:
+    raise SystemExit(f"Expected {expected} primary email contacts, got {actual}")
+PY
+}
+
+assert_primary_email_value() {
+  local file="$1"
+  local expected="$2"
+  python3 - "$file" "$expected" <<'PY'
+import json, sys
+path, expected = sys.argv[1], sys.argv[2].strip().lower()
+org = json.load(open(path))
+contacts = org.get("contacts") or []
+primary = [str((c.get("email") or "")).strip().lower() for c in contacts if c.get("isPrimaryEmail") is True]
+if len(primary) != 1:
+    raise SystemExit(f"Expected exactly 1 primary email contact, got {len(primary)}: {primary}")
+if primary[0] != expected:
+    raise SystemExit(f"Expected primary email {expected!r}, got {primary[0]!r}")
+PY
+}
+
 assert_unique_contact_emails_len() {
   local file="$1"
   local expected="$2"
@@ -222,6 +252,8 @@ assert_org_field_equals "$tmpdir/org1.json" "status" "active"
 assert_contacts_len "$tmpdir/org1.json" 2
 assert_contact_email_exists "$tmpdir/org1.json" "$SMOKE_CONTACT_1"
 assert_contact_email_exists "$tmpdir/org1.json" "$SMOKE_CONTACT_2"
+assert_primary_email_count "$tmpdir/org1.json" 1
+assert_primary_email_value "$tmpdir/org1.json" "$SMOKE_CONTACT_1"
 
 echo "5) IMPORT merge file"
 req import_merge POST "$BASE/api/imports/organizations/excel" \
@@ -244,6 +276,8 @@ assert_org_field_equals "$tmpdir/org2.json" "email" "$SMOKE_ORG_EMAIL"
 assert_unique_contact_emails_len "$tmpdir/org2.json" 3
 assert_contact_email_exists "$tmpdir/org2.json" "$SMOKE_CONTACT_3"
 assert_contact_email_count "$tmpdir/org2.json" "$SMOKE_CONTACT_1" 1
+assert_primary_email_count "$tmpdir/org2.json" 1
+assert_primary_email_value "$tmpdir/org2.json" "$SMOKE_CONTACT_1"
 
 echo "OK: smoke import passed"
 

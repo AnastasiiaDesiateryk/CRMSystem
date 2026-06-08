@@ -135,25 +135,7 @@ public class OrganizationController {
         return ResponseEntity.noContent().build();
     }
 
-//    private static OrganizationResponse toResponse(OrganizationDetails o) {
-//        var fmt = DateTimeFormatter.ISO_INSTANT;
-//        return new OrganizationResponse(
-//                o.id(),
-//                o.name(),
-//                o.website(),
-//                o.websiteStatus(),
-//                o.linkedinUrl(),
-//                o.countryRegion(),
-//                o.email(),
-//                o.category(),
-//                o.status(),
-//                o.notes(),
-//                o.preferredLanguage(),
-//                o.createdAt() == null ? null : fmt.format(o.createdAt()),
-//                o.updatedAt() == null ? null : fmt.format(o.updatedAt()),
-//                o.etag()
-//        );
-//    }
+
 private static OrganizationResponse toResponse(OrganizationDetails o) {
     var fmt = DateTimeFormatter.ISO_INSTANT;
 
@@ -168,6 +150,7 @@ private static OrganizationResponse toResponse(OrganizationDetails o) {
                                     c.email(),
                                     c.preferredLanguage(),
                                     c.notes(),
+                                    c.isPrimaryEmail(),
                                     c.createdAt() == null ? null : fmt.format(c.createdAt()),
                                     c.updatedAt() == null ? null : fmt.format(c.updatedAt()),
                                     c.etag()

@@ -1,25 +1,3 @@
-//package org.example.crm.application.dto;
-//
-//import java.time.Instant;
-//
-//public record OrganizationDetails(
-//        String id,
-//        String name,
-//        String website,
-//        String websiteStatus,
-//        String linkedinUrl,
-//        String countryRegion,
-//        String email,
-//        String category,
-//        String status,
-//        String notes,
-//        String preferredLanguage,
-//        Instant createdAt,
-//        Instant updatedAt,
-//        long version
-//) {
-//    public String etag() { return "W/\"" + version + "\""; }
-//}
 package org.example.crm.application.dto;
 
 import java.time.Instant;
@@ -52,6 +30,7 @@ public record OrganizationDetails(
             String email,
             String preferredLanguage,
             String notes,
+            Boolean isPrimaryEmail,
             Instant createdAt,
             Instant updatedAt,
             long version

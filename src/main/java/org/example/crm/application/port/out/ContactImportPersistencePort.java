@@ -7,4 +7,6 @@ public interface ContactImportPersistencePort {
     boolean existsByOrganizationIdAndEmail(String organizationId, String email);
 
     void createContact(ImportedContactData contact);
+
+    boolean updatePrimaryEmailFlags(String organizationId, String primaryEmail);
 }

@@ -21,6 +21,7 @@ HEADERS = [
     "Name personal contact",
     "Email personal contact (1)",
     "Email personal contact (2)",
+    "Main Email personal contact",
     "Solution type",
     "Solution keyword 1",
     "Solution keyword 2",
@@ -54,6 +55,7 @@ def build_file(path: Path, rows: list[dict]) -> None:
             row.get("Name personal contact", ""),
             row.get("Email personal contact (1)", ""),
             row.get("Email personal contact (2)", ""),
+            row.get("Main Email personal contact", ""),
             row.get("Solution type", ""),
             row.get("Solution keyword 1", ""),
             row.get("Solution keyword 2", ""),
@@ -76,6 +78,7 @@ create_rows = [
         "Name personal contact": "Alice Smoke",
         "Email personal contact (1)": "alice@smoke-org.example",
         "Email personal contact (2)": "ops@smoke-org.example",
+        "Main Email personal contact": "alice@smoke-org.example",
     }
 ]
 
@@ -90,6 +93,7 @@ merge_rows = [
         "Name personal contact": "",
         "Email personal contact (1)": "alice@smoke-org.example",
         "Email personal contact (2)": "new@smoke-org.example",
+        "Main Email personal contact": "",
     }
 ]
 

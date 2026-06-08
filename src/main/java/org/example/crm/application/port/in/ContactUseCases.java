@@ -24,6 +24,7 @@ public final class ContactUseCases {
             String email,
             String preferredLanguage,
             String notes,
+            Boolean isPrimaryEmail,
             Instant createdAt,
             Instant updatedAt,
             String etag
@@ -37,7 +38,8 @@ public final class ContactUseCases {
             String rolePosition,
             String email,
             String preferredLanguage,
-            String notes
+            String notes,
+            Boolean isPrimaryEmail
     ) {}
 
     /**
@@ -48,7 +50,8 @@ public final class ContactUseCases {
             String rolePosition,
             String email,
             String preferredLanguage,
-            String notes
+            String notes,
+            Boolean isPrimaryEmail
     ) {}
 
     // ===== Ports =====

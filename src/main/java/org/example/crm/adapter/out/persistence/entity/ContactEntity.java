@@ -42,6 +42,9 @@ public class ContactEntity {
     @Column(name = "notes", columnDefinition = "text")
     private String notes;
 
+    @Column(name = "is_primary_email", nullable = false)
+    private boolean isPrimaryEmail;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -86,6 +89,9 @@ public class ContactEntity {
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
+
+    public boolean isPrimaryEmail() { return isPrimaryEmail; }
+    public void setPrimaryEmail(boolean primaryEmail) { isPrimaryEmail = primaryEmail; }
 
     public Instant getCreatedAt() { return createdAt; }
 //    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }

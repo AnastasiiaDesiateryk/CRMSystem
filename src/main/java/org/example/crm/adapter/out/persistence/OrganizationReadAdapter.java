@@ -48,28 +48,7 @@ public class OrganizationReadAdapter implements OrganizationReadPort {
         return repo.findById(id).map(OrganizationReadAdapter::toDetails);
     }
 
-//    private static OrganizationDetails toDetails(OrganizationEntity e) {
-//        // IMPORTANT:
-//        // OrganizationDetails у тебя уже используется в OrganizationWriteAdapter.
-//        // Держим mapping одинаковым, чтобы фронт получал одно и то же.
-//        return new OrganizationDetails(
-//                e.getId().toString(),
-//                e.getName(),
-//                e.getWebsite(),
-//                e.getWebsiteStatus(),
-//                e.getLinkedinUrl(),
-//                e.getCountryRegion(),
-//                e.getEmail(),
-//                e.getCategory(),
-//                e.getStatus(),
-//                e.getNotes(),
-//                e.getPreferredLanguage(),
-//                e.getCreatedAt(),
-//                e.getUpdatedAt(),
-//                e.getVersion()
-//        );
-//    }
-//}
+
 private static OrganizationDetails toDetails(OrganizationEntity e) {
     return new OrganizationDetails(
             e.getId().toString(),
@@ -101,6 +80,7 @@ private static OrganizationDetails toDetails(OrganizationEntity e) {
                         c.getEmail(),
                         c.getPreferredLanguage(),
                         c.getNotes(),
+                        c.isPrimaryEmail(),
                         c.getCreatedAt(),
                         c.getUpdatedAt(),
                         c.getVersion()

@@ -47,7 +47,8 @@ public class ContactController {
                 req.rolePosition(),
                 req.email(),
                 req.preferredLanguage(),
-                req.notes()
+                req.notes(),
+                req.isPrimaryEmail()
         ));
 
         return ResponseEntity
@@ -90,7 +91,8 @@ public class ContactController {
                         req.rolePosition(),
                         req.email(),
                         req.preferredLanguage(),
-                        req.notes()
+                        req.notes(),
+                        req.isPrimaryEmail()
                 ),
                 expectedVersion
         );
@@ -119,6 +121,7 @@ public class ContactController {
                 c.email(),
                 c.preferredLanguage(),
                 c.notes(),
+                c.isPrimaryEmail(),
                 c.createdAt() == null ? null : fmt.format(c.createdAt()),
                 c.updatedAt() == null ? null : fmt.format(c.updatedAt()),
                 c.etag()

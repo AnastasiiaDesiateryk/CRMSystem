@@ -13,7 +13,8 @@ public final class ContactDtos {
             String rolePosition,
             String email,
             String preferredLanguage,
-            String notes
+            String notes,
+            Boolean isPrimaryEmail
     ) {}
 
     public record PatchContactRequest(
@@ -21,7 +22,8 @@ public final class ContactDtos {
             String rolePosition,
             String email,
             String preferredLanguage,
-            String notes
+            String notes,
+            Boolean isPrimaryEmail
     ) {}
 
     public record ContactResponse(
@@ -32,6 +34,7 @@ public final class ContactDtos {
             String email,
             String preferredLanguage,
             String notes,
+            Boolean isPrimaryEmail,
             String createdAt,
             String updatedAt,
             String etag

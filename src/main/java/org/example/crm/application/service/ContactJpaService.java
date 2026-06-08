@@ -46,9 +46,9 @@ public class ContactJpaService implements
         e.setEmail(command.email());
         e.setPreferredLanguage(command.preferredLanguage());
         e.setNotes(command.notes());
-
-        var saved = contacts.saveAndFlush(e); // важно: flush, чтобы версия/etag были актуальные
-        entityManager.refresh(saved);         // чтобы подтянуть updated_at из DB trigger
+        e.setPrimaryEmail(Boolean.TRUE.equals(command.isPrimaryEmail()));
+        var saved = contacts.saveAndFlush(e);
+        entityManager.refresh(saved);
 
         return toDetails(saved);
     }
@@ -89,9 +89,10 @@ public class ContactJpaService implements
         if (command.email() != null) e.setEmail(command.email());
         if (command.preferredLanguage() != null) e.setPreferredLanguage(command.preferredLanguage());
         if (command.notes() != null) e.setNotes(command.notes());
+        if (command.isPrimaryEmail() != null) e.setPrimaryEmail(command.isPrimaryEmail());
 
-        var saved = contacts.saveAndFlush(e); // flush => @Version станет +1 сразу
-        entityManager.refresh(saved);         // подтянуть updated_at из DB trigger
+        var saved = contacts.saveAndFlush(e);
+        entityManager.refresh(saved);
 
         return toDetails(saved);
     }
@@ -118,6 +119,7 @@ public class ContactJpaService implements
                 e.getEmail(),
                 e.getPreferredLanguage(),
                 e.getNotes(),
+                e.isPrimaryEmail(),
                 e.getCreatedAt(),
                 e.getUpdatedAt(),
                 weakEtag(e.getVersion())
