@@ -12,6 +12,7 @@ public record OrganizationResponse(
         String email,
         String category,
         String status,
+        String importance,
         String notes,
         String preferredLanguage,
         String createdAt,

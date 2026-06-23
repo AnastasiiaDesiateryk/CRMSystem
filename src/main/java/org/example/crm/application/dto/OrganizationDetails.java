@@ -13,6 +13,7 @@ public record OrganizationDetails(
         String email,
         String category,
         String status,
+        String importance,
         String notes,
         String preferredLanguage,
         Instant createdAt,

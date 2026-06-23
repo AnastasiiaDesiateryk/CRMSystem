@@ -58,6 +58,7 @@ public class OrganizationImportPersistenceAdapter implements OrganizationImportP
                 entity.getEmail(),
                 entity.getCategory(),
                 entity.getStatus(),
+                entity.getImportance(),
                 entity.getNotes(),
                 entity.getPreferredLanguage()
         );
@@ -72,6 +73,7 @@ public class OrganizationImportPersistenceAdapter implements OrganizationImportP
         entity.setEmail(data.email());
         entity.setCategory(data.category());
         entity.setStatus(data.status());
+        entity.setImportance(data.importance());
         entity.setNotes(data.notes());
         entity.setPreferredLanguage(data.preferredLanguage());
     }

@@ -80,6 +80,7 @@ public class OrganizationWriteAdapter implements OrganizationWritePort {
         e.setEmail(c.email());
         e.setCategory(c.category());
         e.setStatus(c.status());
+        e.setImportance(c.importance() != null ? c.importance() : "medium");
         e.setNotes(c.notes());
         e.setPreferredLanguage(c.preferredLanguage());
     }
@@ -93,6 +94,7 @@ public class OrganizationWriteAdapter implements OrganizationWritePort {
         if (c.email() != null) e.setEmail(c.email());
         if (c.category() != null) e.setCategory(c.category());
         if (c.status() != null) e.setStatus(c.status());
+        if (c.importance() != null) e.setImportance(c.importance());
         if (c.notes() != null) e.setNotes(c.notes());
         if (c.preferredLanguage() != null) e.setPreferredLanguage(c.preferredLanguage());
     }
@@ -109,6 +111,7 @@ public class OrganizationWriteAdapter implements OrganizationWritePort {
                 e.getEmail(),
                 e.getCategory(),
                 e.getStatus(),
+                e.getImportance(),
                 e.getNotes(),
                 e.getPreferredLanguage(),
                 e.getCreatedAt(),

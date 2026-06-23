@@ -9,6 +9,7 @@ public record PatchOrganizationCommand(
         String email,
         String category,
         String status,
+        String importance,
         String notes,
         String preferredLanguage
 ) {}

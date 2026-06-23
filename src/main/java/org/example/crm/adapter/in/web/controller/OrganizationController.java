@@ -72,7 +72,7 @@ public class OrganizationController {
     public ResponseEntity<OrganizationResponse> create(@RequestBody CreateOrganizationRequest req) {
         var created = createOrganization.create(new CreateOrganizationCommand(
                 req.name(), req.website(), req.websiteStatus(), req.linkedinUrl(),
-                req.countryRegion(), req.email(), req.category(), req.status(), req.notes(), req.preferredLanguage()
+                req.countryRegion(), req.email(), req.category(), req.status(), req.importance(), req.notes(), req.preferredLanguage()
         ));
 
         var body = toResponse(created);
@@ -119,7 +119,7 @@ public class OrganizationController {
 
         var updated = patchOrganization.patch(id, new PatchOrganizationCommand(
                 req.name(), req.website(), req.websiteStatus(), req.linkedinUrl(),
-                req.countryRegion(), req.email(), req.category(), req.status(), req.notes(), req.preferredLanguage()
+                req.countryRegion(), req.email(), req.category(), req.status(), req.importance(), req.notes(), req.preferredLanguage()
         ), expectedVersion);
 
         return ResponseEntity.ok().eTag(updated.etag()).body(toResponse(updated));
@@ -167,6 +167,7 @@ private static OrganizationResponse toResponse(OrganizationDetails o) {
             o.email(),
             o.category(),
             o.status(),
+            o.importance(),
             o.notes(),
             o.preferredLanguage(),
             o.createdAt() == null ? null : fmt.format(o.createdAt()),

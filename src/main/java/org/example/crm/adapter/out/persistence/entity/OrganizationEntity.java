@@ -32,7 +32,7 @@ public class OrganizationEntity {
     @Column(name = "website", length = 500)
     private String website;
 
-    // working / not-working (можно потом заменить на enum + @Enumerated)
+    // working / not-working (we can add enum + @Enumerated)
     @Column(name = "website_status", length = 50)
     private String websiteStatus;
 
@@ -58,6 +58,9 @@ public class OrganizationEntity {
 
     @Column(name = "preferred_language", length = 5)
     private String preferredLanguage;
+
+    @Column(name = "importance", nullable = false, length = 20)
+    private String importance;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -122,6 +125,9 @@ public class OrganizationEntity {
 
     public String getPreferredLanguage() { return preferredLanguage; }
     public void setPreferredLanguage(String preferredLanguage) { this.preferredLanguage = preferredLanguage; }
+
+    public String getImportance() { return importance; }
+    public void setImportance(String importance) { this.importance = importance; }
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }

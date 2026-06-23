@@ -52,7 +52,7 @@ public class ImportOrganizationsFromExcelService implements ImportOrganizationsF
         List<String> warnings = new ArrayList<>(parsed.warnings());
 
         for (ImportedOrganizationRow row : parsed.rows()) {
-            ImportedOrganizationData patch = mapOrganizationPatch(row);
+            ImportedOrganizationData patch = mapOrganizationPatch(row, warnings);
 
             Optional<ImportedOrganizationSnapshot> existingOpt = findExistingOrganization(patch);
 
@@ -128,7 +128,10 @@ public class ImportOrganizationsFromExcelService implements ImportOrganizationsF
         }
     }
 
-    private ImportedOrganizationData mapOrganizationPatch(ImportedOrganizationRow row) {
+    private ImportedOrganizationData mapOrganizationPatch(
+            ImportedOrganizationRow row,
+            List<String> warnings
+    ) {
         return new ImportedOrganizationData(
                 requiredTrimmed(row.company()),
                 blankToNull(row.website()),
@@ -138,8 +141,10 @@ public class ImportOrganizationsFromExcelService implements ImportOrganizationsF
                 blankToNull(row.emailOrganization()),
                 blankToNull(row.categoryNew()),
                 null,
+                normalizeImportance(row.importance(), warnings, row.rowNumber()),
                 null,
                 null
+
         );
     }
 
@@ -153,6 +158,7 @@ public class ImportOrganizationsFromExcelService implements ImportOrganizationsF
                 patch.email(),
                 patch.category(),
                 DEFAULT_ORGANIZATION_STATUS,
+                patch.importance() != null ? patch.importance() : "medium",
                 null,
                 null
         );
@@ -171,6 +177,7 @@ public class ImportOrganizationsFromExcelService implements ImportOrganizationsF
                 preferNonBlank(patch.email(), existing.email()),
                 preferNonBlank(patch.category(), existing.category()),
                 preferNonBlank(existing.status(), DEFAULT_ORGANIZATION_STATUS),
+                preferNonBlank(patch.importance(), existing.importance()),
                 preferNonBlank(existing.notes(), null),
                 preferNonBlank(existing.preferredLanguage(), null)
         );
@@ -257,5 +264,23 @@ public class ImportOrganizationsFromExcelService implements ImportOrganizationsF
 
     private boolean hasText(String value) {
         return value != null && !value.trim().isEmpty();
+    }
+
+    private String normalizeImportance(String value, List<String> warnings, int rowNumber) {
+        String trimmed = blankToNull(value);
+        if (trimmed == null) {
+            return null;
+        }
+
+        String normalized = trimmed.toLowerCase();
+
+        if (!normalized.equals("high") && !normalized.equals("medium") && !normalized.equals("low")) {
+            warnings.add(
+                    "Row " + rowNumber + ": invalid importance '" + value + "', skipped"
+            );
+            return null;
+        }
+
+        return normalized;
     }
 }

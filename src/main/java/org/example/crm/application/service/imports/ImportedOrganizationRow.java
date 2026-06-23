@@ -11,6 +11,7 @@ public record ImportedOrganizationRow(
         String contactName,
         String contactEmail1,
         String contactEmail2,
-        String mainEmailPersonalContact
+        String mainEmailPersonalContact,
+        String importance
 ) {
 }

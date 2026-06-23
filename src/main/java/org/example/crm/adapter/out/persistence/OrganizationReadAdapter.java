@@ -60,6 +60,7 @@ private static OrganizationDetails toDetails(OrganizationEntity e) {
             e.getEmail(),
             e.getCategory(),
             e.getStatus(),
+            e.getImportance(),
             e.getNotes(),
             e.getPreferredLanguage(),
             e.getCreatedAt(),

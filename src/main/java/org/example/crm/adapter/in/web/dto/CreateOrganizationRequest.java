@@ -9,6 +9,8 @@ public record CreateOrganizationRequest(
         String email,
         String category,
         String status,
+        String importance,
         String notes,
         String preferredLanguage
+
 ) {}

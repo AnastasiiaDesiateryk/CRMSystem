@@ -17,6 +17,7 @@ SMOKE_ORG_EMAIL="${SMOKE_ORG_EMAIL:-hello@smoke-org.example}"
 SMOKE_CONTACT_1="${SMOKE_CONTACT_1:-alice@smoke-org.example}"
 SMOKE_CONTACT_2="${SMOKE_CONTACT_2:-ops@smoke-org.example}"
 SMOKE_CONTACT_3="${SMOKE_CONTACT_3:-new@smoke-org.example}"
+SMOKE_IMPORTANCE="${SMOKE_IMPORTANCE:-high}"
 
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
@@ -249,6 +250,7 @@ assert_org_field_equals "$tmpdir/org1.json" "website" "$SMOKE_WEBSITE"
 assert_org_field_equals "$tmpdir/org1.json" "linkedinUrl" "$SMOKE_LINKEDIN"
 assert_org_field_equals "$tmpdir/org1.json" "email" "$SMOKE_ORG_EMAIL"
 assert_org_field_equals "$tmpdir/org1.json" "status" "active"
+assert_org_field_equals "$tmpdir/org1.json" "importance" "$SMOKE_IMPORTANCE"
 assert_contacts_len "$tmpdir/org1.json" 2
 assert_contact_email_exists "$tmpdir/org1.json" "$SMOKE_CONTACT_1"
 assert_contact_email_exists "$tmpdir/org1.json" "$SMOKE_CONTACT_2"
@@ -273,6 +275,7 @@ fi
 echo "7) ASSERT merge behavior"
 assert_org_field_equals "$tmpdir/org2.json" "linkedinUrl" "$SMOKE_LINKEDIN"
 assert_org_field_equals "$tmpdir/org2.json" "email" "$SMOKE_ORG_EMAIL"
+assert_org_field_equals "$tmpdir/org2.json" "importance" "$SMOKE_IMPORTANCE"
 assert_unique_contact_emails_len "$tmpdir/org2.json" 3
 assert_contact_email_exists "$tmpdir/org2.json" "$SMOKE_CONTACT_3"
 assert_contact_email_count "$tmpdir/org2.json" "$SMOKE_CONTACT_1" 1
@@ -280,6 +283,6 @@ assert_primary_email_count "$tmpdir/org2.json" 1
 assert_primary_email_value "$tmpdir/org2.json" "$SMOKE_CONTACT_1"
 
 echo "OK: smoke import passed"
-
-#python scripts/generate-import-fixtures.py
+# source .venv/bin/activate
+# python scripts/generate-import-fixtures.py
 #./scripts/smoke-import.sh

@@ -33,6 +33,7 @@ public class ApachePoiOrganizationsExcelParser implements OrganizationsExcelPars
     private static final String COL_CONTACT_EMAIL_1 = "Email personal contact (1)";
     private static final String COL_CONTACT_EMAIL_2 = "Email personal contact (2)";
     private static final String COL_MAIN_EMAIL_PERSONAL_CONTACT = "Main Email personal contact";
+    private static final String COL_IMPORTANCE = "Importance";
 
     private static final List<String> REQUIRED_HEADERS = List.of(
             COL_COMPANY,
@@ -92,7 +93,8 @@ public class ApachePoiOrganizationsExcelParser implements OrganizationsExcelPars
                         getCellValue(row, headerIndexes, COL_CONTACT_NAME, formatter),
                         getCellValue(row, headerIndexes, COL_CONTACT_EMAIL_1, formatter),
                         getCellValue(row, headerIndexes, COL_CONTACT_EMAIL_2, formatter),
-                        getOptionalCellValue(row, headerIndexes, COL_MAIN_EMAIL_PERSONAL_CONTACT, formatter)
+                        getOptionalCellValue(row, headerIndexes, COL_MAIN_EMAIL_PERSONAL_CONTACT, formatter),
+                        getOptionalCellValue(row, headerIndexes, COL_IMPORTANCE, formatter)
 
                 ));
             }
@@ -143,6 +145,13 @@ public class ApachePoiOrganizationsExcelParser implements OrganizationsExcelPars
 
         if (optionalMainEmailIndex != null) {
             resolved.put(COL_MAIN_EMAIL_PERSONAL_CONTACT, optionalMainEmailIndex);
+        }
+
+        Integer optionalImportanceIndex =
+                normalizedHeaderIndexes.get(normalizeHeader(COL_IMPORTANCE));
+
+        if (optionalImportanceIndex != null) {
+            resolved.put(COL_IMPORTANCE, optionalImportanceIndex);
         }
 
         return resolved;

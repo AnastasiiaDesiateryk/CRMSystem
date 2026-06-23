@@ -10,5 +10,6 @@ public record PatchOrganizationRequest(
         String category,
         String status,
         String notes,
-        String preferredLanguage
+        String preferredLanguage,
+        String importance
 ) {}

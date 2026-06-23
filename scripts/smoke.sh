@@ -127,6 +127,7 @@ CREATE_BODY='{
   "email":"test@example.com",
   "category":"mobility-fleet-management",
   "status":"active",
+  "importance":"high",
   "notes":"created from smoke",
   "preferredLanguage":"EN"
 }'
@@ -151,6 +152,10 @@ echo "created id=$ORG_ID"
 echo "etag_header=$ETAG_HDR"
 echo "etag_body=$ETAG_BODY"
 
+IMPORTANCE_BODY="$(json_get "$RESP_BODY" "importance")"
+[[ "$IMPORTANCE_BODY" == "high" ]] || { echo "FAIL: importance missing or wrong in create response"; echo "$RESP_BODY"; exit 1; }
+echo "importance_create=OK ($IMPORTANCE_BODY)"
+
 log "Organizations: PATCH with If-Match (positive)"
 
 IF_MATCH="$ETAG_HDR"
@@ -158,11 +163,18 @@ IF_MATCH="$ETAG_HDR"
 
 PATCH_CT="${PATCH_CT:-application/json}"
 
-read -r H B CODE < <(http PATCH "$BASE_URL/api/organizations/$ORG_ID" '{"notes":"patched"}' "$PATCH_CT")
+read -r H B CODE < <(http PATCH "$BASE_URL/api/organizations/$ORG_ID" '{"notes":"patched","importance":"low"}' "$PATCH_CT")
 assert_code "$CODE" "200" "patch positive"
+
 NEW_ETAG="$(get_header "$H" "ETag")"
 [[ -n "$NEW_ETAG" ]] || { echo "FAIL: new ETag header missing after patch"; cat "$H"; exit 1; }
+
+PATCH_RESP="$(cat "$B")"
+PATCH_IMPORTANCE="$(json_get "$PATCH_RESP" "importance")"
+[[ "$PATCH_IMPORTANCE" == "low" ]] || { echo "FAIL: importance not updated on patch"; echo "$PATCH_RESP"; exit 1; }
+
 echo "patch=OK new_etag=$NEW_ETAG"
+echo "importance_patch=OK ($PATCH_IMPORTANCE)"
 
 log "Organizations: PATCH with wrong If-Match (negative expect 412)"
 IF_MATCH='"999999"'

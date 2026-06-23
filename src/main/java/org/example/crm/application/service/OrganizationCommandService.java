@@ -27,7 +27,7 @@ public class OrganizationCommandService implements
     @Transactional
     @Override
     public OrganizationDetails create(CreateOrganizationCommand cmd) {
-        // минимум нормализации
+
         return writePort.create(normalize(cmd));
     }
 
@@ -41,8 +41,7 @@ public class OrganizationCommandService implements
     @Transactional
     @Override
     public OrganizationDetails patch(UUID id, PatchOrganizationCommand cmd, long expectedVersion) {
-        // ВАЖНО: writePort.patch() по контракту возвращает empty и при not found, и при version mismatch.
-        // Чтобы различить 404 vs 412, делаем дополнительный exists-check.
+
         var normalized = normalize(cmd);
 
         return writePort.patch(id, normalized, expectedVersion)
@@ -77,9 +76,21 @@ public class OrganizationCommandService implements
                 trimToNull(c.email()),
                 trimToNull(c.category()),
                 trimToNull(c.status()),
+                normalizeImportance(c.importance()),
                 trimToNull(c.notes()),
                 trimToNull(c.preferredLanguage())
         );
+    }
+
+    private static String normalizeImportance(String v) {
+        String value = trimToNull(v);
+        if (value == null) return null;
+
+        String normalized = value.toLowerCase();
+        if (!normalized.equals("high") && !normalized.equals("medium") && !normalized.equals("low")) {
+            throw new IllegalArgumentException("invalid importance");
+        }
+        return normalized;
     }
 
     private PatchOrganizationCommand normalize(PatchOrganizationCommand c) {
@@ -92,6 +103,7 @@ public class OrganizationCommandService implements
                 trimToNull(c.email()),
                 trimToNull(c.category()),
                 trimToNull(c.status()),
+                normalizeImportance(c.importance()),
                 trimToNull(c.notes()),
                 trimToNull(c.preferredLanguage())
         );

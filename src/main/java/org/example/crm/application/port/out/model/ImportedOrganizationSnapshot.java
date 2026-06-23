@@ -10,6 +10,7 @@ public record ImportedOrganizationSnapshot(
         String email,
         String category,
         String status,
+        String importance,
         String notes,
         String preferredLanguage
 ) {
